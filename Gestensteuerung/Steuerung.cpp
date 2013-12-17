@@ -41,13 +41,14 @@ Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
 	return Point(0,0); //Nur als Dummy-Wert eingefügt, da der Compiler sonst meckert
 }
 
-boolean Steuerung::process(){
-		Mat videoFrame; 
+Mat videoFrame;
+
+boolean Steuerung::process(){ 
 		if (videoCapture.read(videoFrame) == false){ 
 			return false;
 		} 
-		frameNumber++; 
-		cout << "Framenumber: " << frameNumber << endl;
+		//frameNumber++; 
+		//cout << "Framenumber: " << frameNumber << endl;
 
 		videoFrame.copyTo(previousFrame);  
 		imshow("Originalvideo", videoFrame);

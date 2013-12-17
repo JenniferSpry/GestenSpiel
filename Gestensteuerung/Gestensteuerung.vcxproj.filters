@@ -21,10 +21,16 @@
     <ClCompile Include="Steuerung.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Bee.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Steuerung.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bee.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

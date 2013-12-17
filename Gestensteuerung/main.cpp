@@ -1,19 +1,23 @@
 #include <opencv2\opencv.hpp>
 #include <string>
 #include "Steuerung.h"
+#include "Bee.h"
 using namespace cv;
 using namespace std;
 
 Mat bg;
+Mat viewImage;
 Steuerung steuerung;
+Bee bee;
 
 void init(){
 	steuerung.initialize();
+	bee.init();
 	bg = imread("img/bg.png", 1);
 	namedWindow( "Bienchen & Blümchen", 1 ); 	
 }
 
-void move(){
+void moveBG(){
 	Mat temp; 
 	bg.copyTo(temp);
 	for (int x = 0; x < (bg.rows-1); x++){
@@ -27,8 +31,9 @@ void loop(){
 		if (!steuerung.process()){
 			break;
 		}
-		move();
-		imshow( "Bienchen & Blümchen", bg );
+		moveBG();
+		bg.copyTo(viewImage);
+		imshow( "Bienchen & Blümchen", bee.insertInto(viewImage));
 		// end
 		int key = waitKey(30);
 		if (key != -1){
@@ -42,6 +47,6 @@ void loop(){
 int main(){
 	init();
 	loop();
-	//Steuerung.process();
+	steuerung.process();
 	return 0;
 }
