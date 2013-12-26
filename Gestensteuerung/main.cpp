@@ -9,7 +9,7 @@ using namespace std;
 
 Mat bg;
 Mat viewImage;
-Steuerung steuerung;
+//Steuerung steuerung;
 Bee bee;
 clock_t lastFrame;
 
@@ -22,7 +22,7 @@ double getDelta() {
 
 void init(){
 	lastFrame = clock();
-	steuerung.initialize();
+	//steuerung.initialize();
 	bee.init();
 	bg = imread("img/bg.png", 1);
 	namedWindow( "Bienchen & Blümchen", 1 ); 	
@@ -41,14 +41,15 @@ void moveBG(int delta){
 
 void loop(){
 	while(true){
-		if (!steuerung.process()){
+		/*if (!steuerung.process()){
 			break;
-		}
+		}*/
 		//collisionmanagement
 		int delta = getDelta()*0.2;
 		moveBG(delta);
 		bg.copyTo(viewImage);
-		imshow( "Bienchen & Blümchen", bee.insertInto(viewImage));
+		bee.insertInto(viewImage);
+		imshow( "Bienchen & Blümchen", viewImage);
 		// end
 		int key = waitKey(30);
 		if (key != -1){
@@ -61,6 +62,6 @@ void loop(){
 int main(){
 	init();
 	loop();
-	steuerung.process();
+	//steuerung.process();
 	return 0;
 }
