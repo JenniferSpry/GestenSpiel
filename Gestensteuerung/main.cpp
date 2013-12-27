@@ -58,7 +58,9 @@ void moveBG(int delta){
 void moveAndDrawFlowers(int delta){
 	for (int i = 0; i < obstacles.size(); i++){
 		obstacles[i].addToY(delta);
-		obstacles[i].insertInto(viewImage);
+		if (obstacles[i].getCollable()){
+			obstacles[i].insertInto(viewImage);
+		}
 	}
 }
 
