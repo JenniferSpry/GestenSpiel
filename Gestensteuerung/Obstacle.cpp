@@ -9,6 +9,8 @@ Obstacle::Obstacle(int posx, int posy, int maximumX, int maximumY, string name, 
 	worth(amount)
 {}
 
+Obstacle::Obstacle(){}
+
 int Obstacle::getWorth() const{
 	return worth;
 }

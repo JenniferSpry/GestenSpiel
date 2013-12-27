@@ -6,6 +6,7 @@
 class Entity{
 	public:
 		Entity(int posx, int posy, int maximumX, int maximumY, std::string name);
+		Entity();
 		virtual ~Entity();
 		void setX(int entryX);
 		void setY(int entryY);

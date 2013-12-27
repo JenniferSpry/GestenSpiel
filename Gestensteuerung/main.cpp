@@ -16,9 +16,7 @@ clock_t lastFrame;
 int dist;
 const int maxDistance = 2000;
 Bee bee(180, 530, 400, 600, "bee");
-Obstacle flower(30, -70, 400, 600, "flower", 5);
-//vector<Obstacle> obstacles(100);
-//int obstacleAmount = 5;
+vector<Obstacle> obstacles(16);
 
 double getDelta() {
 	long currentTime = clock();
@@ -27,18 +25,20 @@ double getDelta() {
 	return delta;
 }
 
-//void createFlowers(int amount){
-//	//for (int i = 0; i < amount; i++){
-//		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
-//		//obstacles[0] = Obstacle(x, -50, bg.cols, (maxDistance-bg.rows), "flower", 5);
-//	//}
-//}
+void createFlowers(){
+	for (int i = 0; i < obstacles.size(); i++){
+		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
+		int y = (rand() % (int)(bg.rows + 400 + 1));
+		//min + (rand() % (int)(max - min + 1))
+		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, "flower", 5);
+	}
+}
 
 void init(){
 	lastFrame = clock();
 	//steuerung.initialize();
 	bg = imread("img/bg.png", 1);
-	//createFlowers(20);
+	createFlowers();
 	namedWindow( "Bienchen & Blümchen", 1 ); 
 	dist = 0;
 }
@@ -55,10 +55,11 @@ void moveBG(int delta){
 	dist = dist + delta;
 }
 
-void moveAndDrawFlowers(){
-	//for (int i = 0; i < 20; i++){
-		flower.insertInto(viewImage);
-	//}
+void moveAndDrawFlowers(int delta){
+	for (int i = 0; i < obstacles.size(); i++){
+		obstacles[i].addToY(delta);
+		obstacles[i].insertInto(viewImage);
+	}
 }
 
 void loop(){
@@ -71,8 +72,7 @@ void loop(){
 		//cout << "delta: " << delta <<endl;
 		moveBG(delta);
 		bg.copyTo(viewImage);
-		flower.addToY(delta);
-		moveAndDrawFlowers();
+		moveAndDrawFlowers(delta);
 		bee.insertInto(viewImage);
 		imshow( "Bienchen & Blümchen", viewImage);
 		// end

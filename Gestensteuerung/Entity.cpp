@@ -16,6 +16,8 @@ Entity::Entity(int posx, int posy, int maximumX, int maximumY, string name)
 		image = imread("img/"+name+".png", CV_LOAD_IMAGE_COLOR);
 	}
 
+Entity::Entity(){}
+
 //Destruktor
 Entity::~Entity(){}
 
@@ -46,6 +48,11 @@ void Entity::setX(int enterX){
 
 void Entity::addToY(int entryY){
 	y = y + entryY;
+	if (y > maxY){
+		// reposition
+		x = (rand() % (int)(maxX - 50 + 1));
+		y = 0 - (rand() % (int)(maxY + 400 + 1));
+	}
 }
 
 void Entity::insertInto(Mat &viewImage){
