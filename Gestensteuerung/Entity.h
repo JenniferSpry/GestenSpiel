@@ -10,7 +10,6 @@ class Entity{
 		virtual ~Entity();
 		void setX(int entryX);
 		void setY(int entryY);
-		void addToY(int entryY);
 		int getX() const;
 		int getY() const;
 		void insertInto(cv::Mat &viewImage);

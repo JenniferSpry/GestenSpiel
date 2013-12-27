@@ -14,9 +14,9 @@ Mat viewImage;
 //Steuerung steuerung;
 clock_t lastFrame;
 int dist;
-const int maxDistance = 2000;
+const int maxDistance = 4000;
 Bee bee(180, 530, 400, 600, "bee");
-vector<Obstacle> obstacles(16);
+vector<Obstacle> obstacles(30);
 
 double getDelta() {
 	long currentTime = clock();
@@ -62,12 +62,18 @@ void moveAndDrawFlowers(int delta){
 	}
 }
 
+void checkCollision(){
+	for (int i = 0; i < obstacles.size(); i++){
+		bee.collidesWith(obstacles[i]);
+	}
+}
+
 void loop(){
 	while(dist < maxDistance){
 		/*if (!steuerung.process()){
 			break;
 		}*/
-		//collisionmanagement
+		checkCollision();
 		int delta = getDelta()*0.1;
 		//cout << "delta: " << delta <<endl;
 		moveBG(delta);

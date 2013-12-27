@@ -46,15 +46,6 @@ void Entity::setX(int enterX){
 	}
 }
 
-void Entity::addToY(int entryY){
-	y = y + entryY;
-	if (y > maxY){
-		// reposition
-		x = (rand() % (int)(maxX - 50 + 1));
-		y = 0 - (rand() % (int)(maxY + 400 + 1));
-	}
-}
-
 void Entity::insertInto(Mat &viewImage){
 	if ((y >= 0) && (y < maxY)) {
 		if ((y + image.rows) > maxY){

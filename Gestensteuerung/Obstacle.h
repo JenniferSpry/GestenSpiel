@@ -9,7 +9,13 @@ class Obstacle : public Entity{
 		Obstacle(int posx, int posy, int maximumX, int maximumY, std::string name, int amount);
 		Obstacle();
 		int getWorth() const;
+		void setCollable(bool b);
+		bool getCollable() const;
+		void addToY(int entryY);
+		int getHeight();
+		int getWidth();
 	private:
 		int worth;
+		bool collable; //so it will only register as hit once
 };
 #endif
