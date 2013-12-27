@@ -1,21 +1,14 @@
 #ifndef BEE_H
 #define BEE_H
-#include <opencv2/opencv.hpp>
+#include <string>
 
-class Bee{
+#include "Entity.h"
+
+class Bee : public Entity{
 	public:
-		Bee();
-		~Bee();
-		void init();
-		void setX(int entryX);
-		int getX();
-		int getY();
-		void insertInto(cv::Mat &viewImage);
+		Bee(int posx, int posy, std::string name);
+		void addPoint();
 	private:
-		int x;
-		int y;
-		cv::Mat image;
-		cv::Mat mask;
-		void createMask();
+		int points;
 };
 #endif

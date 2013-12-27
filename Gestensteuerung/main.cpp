@@ -10,7 +10,7 @@ using namespace std;
 Mat bg;
 Mat viewImage;
 //Steuerung steuerung;
-Bee bee;
+Bee bee(20, 20, "bee");
 clock_t lastFrame;
 
 double getDelta() {
@@ -23,7 +23,6 @@ double getDelta() {
 void init(){
 	lastFrame = clock();
 	//steuerung.initialize();
-	bee.init();
 	bg = imread("img/bg.png", 1);
 	namedWindow( "Bienchen & Blümchen", 1 ); 	
 }
