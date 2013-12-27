@@ -4,8 +4,8 @@
 using namespace std;
 
 // Konstruktor
-Obstacle::Obstacle(int posx, int posy, string name, int amount)
-	:Entity(posx, posy, name),
+Obstacle::Obstacle(int posx, int posy, int maximumX, int maximumY, string name, int amount)
+	:Entity(posx, posy, maximumX, maximumY, name),
 	worth(amount)
 {}
 

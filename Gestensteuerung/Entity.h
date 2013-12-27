@@ -5,13 +5,17 @@
 
 class Entity{
 	public:
-		Entity(int posx, int posy, std::string name);
+		Entity(int posx, int posy, int maximumX, int maximumY, std::string name);
 		virtual ~Entity();
 		void setX(int entryX);
+		void setY(int entryY);
+		void addToY(int entryY);
 		int getX() const;
 		int getY() const;
 		void insertInto(cv::Mat &viewImage);
 	protected:
+		int maxX;
+		int maxY;
 		int x;
 		int y;
 		cv::Mat image;

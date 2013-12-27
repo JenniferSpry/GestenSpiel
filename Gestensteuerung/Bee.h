@@ -6,7 +6,7 @@
 
 class Bee : public Entity{
 	public:
-		Bee(int posx, int posy, std::string name);
+		Bee(int posx, int posy, int maximumX, int maximunY, std::string name);
 		void addPoint();
 	private:
 		int points;
