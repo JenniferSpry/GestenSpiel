@@ -82,6 +82,7 @@ void ViewController::draw(int delta){
 	bg.copyTo(viewImage);
 	moveAndDrawFlowers(delta);
 	bee.insertInto(viewImage);
+	putText(viewImage, itos(bee.getPoints()), Point(10,viewImage.rows-10), CV_FONT_HERSHEY_SIMPLEX , 0.5, Scalar(255,255,255),2);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
@@ -96,6 +97,13 @@ void ViewController::drawSolution(){
 		Entity sol(80, 200, 400, 600, "lost");
 		sol.insertInto(viewImage);
 	}
+	putText(viewImage, itos(bee.getPoints()), Point(160,320), CV_FONT_HERSHEY_SIMPLEX , 1, Scalar(255,255,255),2);
 	imshow( "Bienchen & Blümchen", viewImage);
 	waitKey(0);
+}
+
+string ViewController::itos(int i){
+	stringstream ss;
+	ss << i;
+	return ss.str();
 }

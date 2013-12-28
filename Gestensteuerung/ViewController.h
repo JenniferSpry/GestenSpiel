@@ -22,5 +22,6 @@ class ViewController{
 		Bee bee;
 		std::vector<Obstacle> obstacles;
 		std::vector<std::string> kindsOfFlower;
+		std::string itos(int i);
 };
 #endif
