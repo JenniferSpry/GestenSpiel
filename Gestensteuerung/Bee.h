@@ -8,6 +8,7 @@ class Bee : public Entity{
 	public:
 		Bee(int posx, int posy, int maximumX, int maximunY, std::string name);
 		void addPoints(int p);
+		int getPoints() const;
 		void collidesWith(Obstacle &ob);
 		void insertInto(cv::Mat &viewImage);
 	private:

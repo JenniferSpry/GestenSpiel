@@ -19,6 +19,10 @@ void Bee::addPoints(int p){
 	points = points + p;
 }
 
+int Bee::getPoints() const{
+	return points;
+}
+
 void Bee::collidesWith(Obstacle &ob){
 	// the 20 assures that it does not hit everything it just touches
 	if (ob.getCollable()){ // has it allready been hit just now?

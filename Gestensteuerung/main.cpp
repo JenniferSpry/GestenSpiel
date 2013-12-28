@@ -10,7 +10,7 @@ using namespace std;
 //Steuerung steuerung;
 clock_t lastFrame;
 int dist;
-const int maxDistance = 4000;
+const int maxDistance = 2000;
 ViewController view;
 
 double getDelta() {
@@ -36,6 +36,7 @@ void loop(){
 			break;
 		}
 	}
+	view.drawSolution();
 }
 
 

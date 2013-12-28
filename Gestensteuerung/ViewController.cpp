@@ -41,7 +41,7 @@ void ViewController::createFlowers(){
 
 void ViewController::createEnemies(){
 	int amountOfFlowers = obstacles.size();
-	obstacles.resize(amountOfFlowers+5);
+	obstacles.resize(amountOfFlowers+25);
 	for (int i = amountOfFlowers; i < obstacles.size(); i++){
 		int x = (rand() % (int)(bg.cols - 40 + 1));
 		int y = (rand() % (int)(bg.rows + 400 + 1));
@@ -83,4 +83,19 @@ void ViewController::draw(int delta){
 	moveAndDrawFlowers(delta);
 	bee.insertInto(viewImage);
 	imshow( "Bienchen & Blümchen", viewImage);
+}
+
+void ViewController::drawSolution(){
+	viewImage = viewImage * 0.5;
+	if (bee.getPoints() > 0){
+		// won
+		Entity sol(80, 200, 400, 600, "won");
+		sol.insertInto(viewImage);
+	} else {
+		// lost
+		Entity sol(80, 200, 400, 600, "lost");
+		sol.insertInto(viewImage);
+	}
+	imshow( "Bienchen & Blümchen", viewImage);
+	waitKey(0);
 }

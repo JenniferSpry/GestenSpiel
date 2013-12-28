@@ -10,6 +10,7 @@ class ViewController{
 		ViewController();
 		~ViewController();
 		void draw(int delta);
+		void drawSolution();
 	private:
 		cv::Mat bg;
 		cv::Mat viewImage;
