@@ -144,12 +144,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="Steuerung.cpp" />
+    <ClCompile Include="ViewController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bee.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="Steuerung.h" />
+    <ClInclude Include="ViewController.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
