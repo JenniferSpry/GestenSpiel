@@ -9,7 +9,11 @@ class Bee : public Entity{
 		Bee(int posx, int posy, int maximumX, int maximunY, std::string name);
 		void addPoints(int p);
 		void collidesWith(Obstacle &ob);
+		void insertInto(cv::Mat &viewImage);
 	private:
 		int points;
+		cv::Mat hurtImage;
+		bool hurt;
+		int hurtTime;
 };
 #endif
