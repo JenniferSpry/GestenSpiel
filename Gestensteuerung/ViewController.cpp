@@ -17,18 +17,35 @@ ViewController::ViewController()
 	kindsOfFlower[1] = "flower_1";
 	kindsOfFlower[2] = "flower_2";
 	createFlowers();
+	createEnemies();
 	}
 
 ViewController::~ViewController(){};
 
 
 void ViewController::createFlowers(){
-	for (int i = 0; i < obstacles.size(); i++){
+	for (int i = 0; i < 8; i++){
+		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
+		int y = (rand() % (int)(bg.rows + 1));
+		int type = (rand() % (int)(2 + 1));
+		//min + (rand() % (int)(max - min + 1))
+		obstacles[i] = Obstacle(x, y, bg.cols, bg.rows, kindsOfFlower[type], 5);
+	}
+	for (int i = 8; i < obstacles.size(); i++){
 		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
 		int y = (rand() % (int)(bg.rows + 400 + 1));
 		int type = (rand() % (int)(2 + 1));
-		//min + (rand() % (int)(max - min + 1))
 		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, kindsOfFlower[type], 5);
+	}
+}
+
+void ViewController::createEnemies(){
+	int amountOfFlowers = obstacles.size();
+	obstacles.resize(amountOfFlowers+5);
+	for (int i = amountOfFlowers; i < obstacles.size(); i++){
+		int x = (rand() % (int)(bg.cols - 40 + 1));
+		int y = (rand() % (int)(bg.rows + 400 + 1));
+		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, "enemy", -20);
 	}
 }
 
@@ -47,7 +64,7 @@ void ViewController::moveBG(int delta){
 void ViewController::moveAndDrawFlowers(int delta){
 	for (int i = 0; i < obstacles.size(); i++){
 		obstacles[i].addToY(delta);
-		if (obstacles[i].getCollable()){
+		if ((obstacles[i].getCollable()) || (obstacles[i].getWorth() < 0)){
 			obstacles[i].insertInto(viewImage);
 		}
 	}

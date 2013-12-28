@@ -14,6 +14,7 @@ class ViewController{
 		cv::Mat bg;
 		cv::Mat viewImage;
 		void createFlowers();
+		void createEnemies();
 		void moveBG(int delta);
 		void moveAndDrawFlowers(int delta);
 		void checkCollision();
