@@ -35,10 +35,13 @@ void loop(){
 		bg.copyTo(viewImage);
 		imshow( "Bienchen & Blümchen", bee.insertInto(viewImage));
 		// end
+		
 		int key = waitKey(30);
+		/*
 		if (key != -1){
 			break;
 		}
+		*/
 	}
 }
 
