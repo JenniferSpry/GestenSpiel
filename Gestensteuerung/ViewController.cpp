@@ -98,8 +98,10 @@ void ViewController::drawSolution(){
 		sol.insertInto(viewImage);
 	}
 	putText(viewImage, itos(bee.getPoints()), Point(160,320), CV_FONT_HERSHEY_SIMPLEX , 1, Scalar(255,255,255),2);
+	//this will be in the image
+	putText(viewImage, "Press the spacebar", Point(160,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	putText(viewImage, "to play again", Point(160,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
 	imshow( "Bienchen & Blümchen", viewImage);
-	waitKey(0);
 }
 
 string ViewController::itos(int i){
