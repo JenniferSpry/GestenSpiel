@@ -29,6 +29,7 @@ void Steuerung::initialize(){
 
 	//namedWindow("Blue Testframe");
 	namedWindow("Originalvideo");
+
 }
 
 float Steuerung::getXPosition(){
@@ -68,14 +69,16 @@ Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
         }
 }
 
-Mat videoFrame;
-//Mat blueFrame; 
-Mat videoFrameHSV;
-Mat videoFrameBin; //Binärmaske
-Mat pinkLight;
-Mat pinkDark;
+
+
 
 boolean Steuerung::process(){ 
+	//Waren mal vor der Funktion
+		Mat videoFrame;
+		//Mat blueFrame; 
+		Mat videoFrameHSV;
+		Mat videoFrameBin; //Binärmaske
+
 		if (videoCapture.read(videoFrame) == false){ 
 			return false;
 		} 

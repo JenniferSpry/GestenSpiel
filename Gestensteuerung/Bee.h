@@ -1,20 +1,20 @@
 #ifndef BEE_H
 #define BEE_H
-#include <opencv2/opencv.hpp>
+#include <string>
+#include "Obstacle.h"
+#include "Entity.h"
 
-class Bee{
+class Bee : public Entity{
 	public:
-		Bee();
-		~Bee();
-		void init();
-		void setX(int entryX);
-		int getX();
-		int getY();
-		cv::Mat insertInto(cv::Mat viewImage);
+		Bee(int posx, int posy, int maximumX, int maximunY, std::string name);
+		void addPoints(int p);
+		int getPoints() const;
+		void collidesWith(Obstacle &ob);
+		void insertInto(cv::Mat &viewImage);
 	private:
-		int x;
-		int y;
-		cv::Mat image;
-		void overlayImage(const cv::Mat &background, const cv::Mat &foreground, cv::Mat &output, cv::Point2i location);
+		int points;
+		cv::Mat hurtImage;
+		bool hurt;
+		int hurtTime;
 };
 #endif
