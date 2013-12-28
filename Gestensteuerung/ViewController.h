@@ -19,5 +19,6 @@ class ViewController{
 		void checkCollision();
 		Bee bee;
 		std::vector<Obstacle> obstacles;
+		std::vector<std::string> kindsOfFlower;
 };
 #endif

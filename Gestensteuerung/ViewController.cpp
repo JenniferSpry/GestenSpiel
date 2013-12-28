@@ -8,11 +8,15 @@ using namespace std;
 
 ViewController::ViewController()
 	:bee(180, 530, 400, 600, "bee"),
-	obstacles(30)
+	obstacles(30),
+	kindsOfFlower(3)
 	{
 	bg = imread("img/bg.png", 1);
-	createFlowers();
 	namedWindow( "Bienchen & Blümchen", 1 ); 
+	kindsOfFlower[0] = "flower_0";
+	kindsOfFlower[1] = "flower_1";
+	kindsOfFlower[2] = "flower_2";
+	createFlowers();
 	}
 
 ViewController::~ViewController(){};
@@ -22,8 +26,9 @@ void ViewController::createFlowers(){
 	for (int i = 0; i < obstacles.size(); i++){
 		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
 		int y = (rand() % (int)(bg.rows + 400 + 1));
+		int type = (rand() % (int)(2 + 1));
 		//min + (rand() % (int)(max - min + 1))
-		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, "flower", 5);
+		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, kindsOfFlower[type], 5);
 	}
 }
 
