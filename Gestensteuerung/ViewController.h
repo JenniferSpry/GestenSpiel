@@ -5,6 +5,8 @@
 #include "Obstacle.h"
 #include "Bee.h"
 
+#define PI 3.14159265
+
 class ViewController{
 	public:
 		ViewController();

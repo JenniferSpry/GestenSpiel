@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <math.h>
 #include "ViewController.h"
 #include "Obstacle.h"
 #include "Bee.h"
@@ -41,11 +42,10 @@ void ViewController::createFlowers(){
 
 void ViewController::createEnemies(){
 	int amountOfFlowers = obstacles.size();
-	obstacles.resize(amountOfFlowers+25);
+	obstacles.resize(amountOfFlowers+1);
 	for (int i = amountOfFlowers; i < obstacles.size(); i++){
-		int x = (rand() % (int)(bg.cols - 40 + 1));
 		int y = (rand() % (int)(bg.rows + 400 + 1));
-		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, "enemy", -20);
+		obstacles[i] = Obstacle(200, -y, bg.cols, bg.rows, "enemy", -20);
 	}
 }
 
@@ -66,6 +66,10 @@ void ViewController::moveAndDrawFlowers(int delta){
 		obstacles[i].addToY(delta);
 		if ((obstacles[i].getCollable()) || (obstacles[i].getWorth() < 0)){
 			obstacles[i].insertInto(viewImage);
+			if (obstacles[i].getWorth() < 0){
+				cout << abs(sin((double)obstacles[i].getY()) *350 ) << endl;
+				obstacles[i].setX(abs(300*(sin((double)obstacles[i].getY()) * 0.2)));
+			}
 		}
 	}
 }

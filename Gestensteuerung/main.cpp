@@ -9,7 +9,7 @@ using namespace std;
 Steuerung steuerung;
 clock_t lastFrame;
 int dist;
-const int maxDistance = 500;
+const int maxDistance = 2000;
 ViewController view;
 bool gameOn = true;
 
@@ -32,6 +32,10 @@ void loop(){
 		view.draw(delta);
 		dist = dist + delta;
 		int key = waitKey(30);
+		if (key == 27){
+			gameOn = false;
+			break;
+		} 
 		/*
 		if (key != -1){
 			break;
@@ -45,7 +49,10 @@ int main(){
 	init();
 	while (gameOn){
 		loop();
-		view.drawSolution();
+		steuerung.process();
+		if (dist >= maxDistance){
+			view.drawSolution();
+		}
 		int k = waitKey(0);
 		if (k == 27){
 			break;
@@ -56,6 +63,5 @@ int main(){
 			view = ViewController();
 		}
 	}
-	steuerung.process();
 	return 0;
 }
