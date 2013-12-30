@@ -80,12 +80,12 @@ void ViewController::checkCollision(){
 	}
 }
 
-void ViewController::draw(int delta){
+void ViewController::draw(int delta, float xPosEntry){
 	checkCollision();
 	moveBG(delta);
 	bg.copyTo(viewImage);
 	moveAndDrawFlowers(delta);
-	bee.insertInto(viewImage);
+	bee.insertInto(viewImage, xPosEntry);
 	putText(viewImage, itos(bee.getPoints()), Point(10,viewImage.rows-10), CV_FONT_HERSHEY_SIMPLEX , 0.5, Scalar(255,255,255),2);
 	imshow( "Bienchen & Blümchen", viewImage);
 }

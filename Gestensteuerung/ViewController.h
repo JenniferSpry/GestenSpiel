@@ -11,7 +11,7 @@ class ViewController{
 	public:
 		ViewController();
 		~ViewController();
-		void draw(int delta);
+		void draw(int delta, float xPosEntry);
 		void drawSolution();
 	private:
 		cv::Mat bg;

@@ -11,11 +11,14 @@ public:
 	float getXPosition(); //gibt aktuelle X-Position zurück. Diese Berechnet sich aus dem Mittelwert der Positionen der weißen Pixel in der Binärmaske.
 	void convertToBinary(cv::Mat videoFrame, cv::Mat& processedFrame); //Konvertiert jedes Frame in ein Binärframe, wobei der "Controller" weiß ist, der Hintergrund schwarz.
 	void convertToHSV(cv::Mat videoFrame, cv::Mat& processedFrame);
+	void eliminateFlawedAreas(cv::Mat videoFrameBin);
 	cv::Point centroidOfWhitePixels(const cv::Mat& image); //Berechnet den "Mittelpunkt" der weißen Pixel in der Binärmaske und gibt seine Position zurück (als Point-Objekt)
 	boolean process(); //Ein Frame wird verarbeitet. "Main-Loop" dieser Klasse.
 protected:
 	cv::VideoCapture videoCapture; //Zum Capturen von der Webcam
 private:
+	float xPositionMax; //maximale xPosition (=Breite des Spielfelds)
+	float xPositionPrev;//XPosition im letzten loop-Durchlauf
 	float xPosition; //aktuelle horizontale Position des Controllers
 	float xPositionChange;//horizontale Positionsänderung seit dem letzten Frame. Kann positiv oder negativ sein.
 	//cv::Mat controllerFrame;//von der Webcam aufgenommene Frames

@@ -28,8 +28,12 @@ void init(){
 
 void loop(){
 	while(dist < maxDistance){
+		steuerung.process(); //muss hier rein, da für jede Runde im loop die Steuerung angesprochen werden muss
+		
+		float xPos = steuerung.getXPosition();//Schon für die Breite des "Spielfelds" angepasste xPosition erfragen
 		int delta = getDelta()*0.1;
-		view.draw(delta);
+		//Auch xPos an view übergeben
+		view.draw(delta, xPos); //hier wird alles gezeichnet (inkl Biene)
 		dist = dist + delta;
 		int key = waitKey(30);
 		if (key == 27){
@@ -49,7 +53,7 @@ int main(){
 	init();
 	while (gameOn){
 		loop();
-		steuerung.process();
+		//steuerung.process();
 		if (dist >= maxDistance){
 			view.drawSolution();
 		}

@@ -44,8 +44,9 @@ void Bee::collidesWith(Obstacle &ob){
 	}
 }
 
-void Bee::insertInto(Mat &viewImage){
-	Rect roi(Point(x, y), image.size());
+void Bee::insertInto(Mat &viewImage, float xPosEntry){
+	//Rect roi(Point(x, y), image.size());
+	Rect roi(Point(xPosEntry, y), image.size());
 	Mat destinationROI = viewImage(roi);
 	if (hurt){
 		hurtImage.copyTo(destinationROI, mask);
