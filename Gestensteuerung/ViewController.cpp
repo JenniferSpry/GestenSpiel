@@ -3,6 +3,7 @@
 #include "ViewController.h"
 #include "Obstacle.h"
 #include "Bee.h"
+#include "Enemy.h"
 
 using namespace cv;
 using namespace std;
@@ -45,7 +46,7 @@ void ViewController::createEnemies(){
 	obstacles.resize(amountOfFlowers+1);
 	for (int i = amountOfFlowers; i < obstacles.size(); i++){
 		int y = (rand() % (int)(bg.rows + 400 + 1));
-		obstacles[i] = Obstacle(200, -y, bg.cols, bg.rows, "enemy", -20);
+		obstacles[i] = Enemy(200, -y, bg.cols, bg.rows, "enemy", -20);
 	}
 }
 
@@ -64,13 +65,7 @@ void ViewController::moveBG(int delta){
 void ViewController::moveAndDrawFlowers(int delta){
 	for (int i = 0; i < obstacles.size(); i++){
 		obstacles[i].addToY(delta);
-		if ((obstacles[i].getCollable()) || (obstacles[i].getWorth() < 0)){
-			obstacles[i].insertInto(viewImage);
-			if (obstacles[i].getWorth() < 0){
-				cout << abs(sin((double)obstacles[i].getY()) *350 ) << endl;
-				obstacles[i].setX(abs(300*(sin((double)obstacles[i].getY()) * 0.2)));
-			}
-		}
+		obstacles[i].insertInto(viewImage);
 	}
 }
 
@@ -81,10 +76,10 @@ void ViewController::checkCollision(){
 }
 
 void ViewController::draw(int delta, float xPosEntry){
-	checkCollision();
 	moveBG(delta);
 	bg.copyTo(viewImage);
 	moveAndDrawFlowers(delta);
+	checkCollision();
 	bee.insertInto(viewImage, xPosEntry);
 	putText(viewImage, itos(bee.getPoints()), Point(10,viewImage.rows-10), CV_FONT_HERSHEY_SIMPLEX , 0.5, Scalar(255,255,255),2);
 	imshow( "Bienchen & Blümchen", viewImage);

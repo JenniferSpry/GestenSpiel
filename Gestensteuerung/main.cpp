@@ -40,11 +40,6 @@ void loop(){
 			gameOn = false;
 			break;
 		} 
-		/*
-		if (key != -1){
-			break;
-		}
-		*/
 	}
 }
 
@@ -53,7 +48,6 @@ int main(){
 	init();
 	while (gameOn){
 		loop();
-		//steuerung.process();
 		if (dist >= maxDistance){
 			view.drawSolution();
 		}
