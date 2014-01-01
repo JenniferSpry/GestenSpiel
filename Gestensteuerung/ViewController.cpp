@@ -111,6 +111,15 @@ void ViewController::drawSolution(){
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
+void ViewController::drawPause(){
+	// draw at the end of the game
+	viewImage = viewImage * 0.5;
+	//this will be in the image
+	putText(viewImage, "Press the spacebar to continue", Point(100,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	putText(viewImage, "Press Esc to leave", Point(100,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	imshow( "Bienchen & Blümchen", viewImage);
+}
+
 string ViewController::itos(int i){
 	// integer to string helpermethod
 	stringstream ss;

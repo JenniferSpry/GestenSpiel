@@ -13,6 +13,7 @@ class ViewController{
 		~ViewController();
 		void draw(int delta, float xPosEntry);
 		void drawSolution();
+		void drawPause();
 	private:
 		cv::Mat bg;
 		cv::Mat viewImage;
