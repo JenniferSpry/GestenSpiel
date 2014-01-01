@@ -6,12 +6,13 @@
 using namespace cv;
 using namespace std;
 
-//Steuerung steuerung;
+Steuerung steuerung;
 clock_t lastFrame;
 int dist;
 const int maxDistance = 2000;
 ViewController view;
 bool gameOn = true;
+int key;
 
 double getDelta() {
 	long currentTime = clock();
@@ -22,20 +23,21 @@ double getDelta() {
 
 void init(){
 	lastFrame = clock();
-	//steuerung.initialize();
+	steuerung.initialize();
 	dist = 0;
 }
 
 void loop(){
 	while(dist < maxDistance){
-		//steuerung.process(); //muss hier rein, da für jede Runde im loop die Steuerung angesprochen werden muss
-		
-		float xPos = 200;//steuerung.getXPosition();//Schon für die Breite des "Spielfelds" angepasste xPosition erfragen
+		if (!steuerung.process()){ //game stops if there is a problem with the camera
+			break;
+		}
+		float xPos = steuerung.getXPosition();//Schon für die Breite des "Spielfelds" angepasste xPosition erfragen
 		int delta = getDelta()*0.1;
 		//Auch xPos an view übergeben
 		view.draw(delta, xPos); //hier wird alles gezeichnet (inkl Biene)
 		dist = dist + delta;
-		int key = waitKey(30);
+		key = waitKey(30);
 		//pause at anykey
 		if (key != -1){
 			break;
@@ -43,30 +45,53 @@ void loop(){
 	}
 }
 
+void startLoop(){
+	while (true){
+		if (!steuerung.process()){ //stops if there is a problem with the camera
+			break;
+			gameOn = false;
+		}
+		//steuerung.process();
+		float xPos = steuerung.getXPosition();//Schon für die Breite des "Spielfelds" angepasste xPosition erfragen
+		//Auch xPos an view übergeben
+		view.drawStart(xPos);
+		key = waitKey(30);
+		if (key == 27){
+			//exit
+			gameOn = false;
+			break;
+		} else if (key != -1) {
+			break;
+		}
+	}
+}
+
 
 int main(){
 	init();
+	startLoop();
+	//start game
 	while (gameOn){
+		lastFrame = clock();
 		loop();
 		if (dist >= maxDistance){
 			// end game
 			view.drawSolution();
-			int k = waitKey(0);
-			if (k == 27){
+			key = waitKey(0);
+			if (key == 27){
 				//exit
 				gameOn = false;
 				break;
-			} else if (k != -1){
+			} else if (key != -1){
 				//restart game
 				dist = 0;
-				lastFrame = clock();
 				view = ViewController();
 			}
 		} else {
 			// game paused
 			view.drawPause();
-			int k = waitKey(0);
-			if (k == 27){
+			key = waitKey(0);
+			if (key == 27){
 				//exit
 				break;
 			}
