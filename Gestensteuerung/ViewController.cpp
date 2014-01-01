@@ -10,7 +10,8 @@ using namespace std;
 
 ViewController::ViewController()
 	:bee(180, 530, 400, 600, "bee"),
-	obstacles(30),
+	flowers(30),
+	enemies(3),
 	kindsOfFlower(3)
 	{
 	bg = imread("img/bg.png", 1);
@@ -32,25 +33,23 @@ void ViewController::createFlowers(){
 		int y = (rand() % (int)(bg.rows + 1));
 		int type = (rand() % (int)(2 + 1));
 		//min + (rand() % (int)(max - min + 1))
-		obstacles[i] = Obstacle(x, y, bg.cols, bg.rows, kindsOfFlower[type], 5);
+		flowers[i] = Obstacle(x, y, bg.cols, bg.rows, kindsOfFlower[type], 5);
 	}
 	// create the rest above the game frame
-	for (int i = 8; i < obstacles.size(); i++){
+	for (int i = 8; i < flowers.size(); i++){
 		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
 		int y = (rand() % (int)(bg.rows + 400 + 1));
 		int type = (rand() % (int)(2 + 1));
-		obstacles[i] = Obstacle(x, -y, bg.cols, bg.rows, kindsOfFlower[type], 5);
+		flowers[i] = Obstacle(x, -y, bg.cols, bg.rows, kindsOfFlower[type], 5);
 	}
 }
 
 void ViewController::createEnemies(){
-	// add enemies to the flowers
+	// create enemies
 	// insert them above the game frame
-	int amountOfFlowers = obstacles.size();
-	obstacles.resize(amountOfFlowers+1);
-	for (int i = amountOfFlowers; i < obstacles.size(); i++){
+	for (int i = 0; i < enemies.size(); i++){
 		int y = (rand() % (int)(bg.rows + 400 + 1));
-		obstacles[i] = Enemy(200, -y, bg.cols, bg.rows, "enemy", -20);
+		enemies[i] = Enemy(200, -y, bg.cols, bg.rows, "enemy", -20);
 	}
 }
 
@@ -67,16 +66,23 @@ void ViewController::moveBG(int delta){
 	}
 }
 
-void ViewController::moveAndDrawFlowers(int delta){
-	for (int i = 0; i < obstacles.size(); i++){
-		obstacles[i].addToY(delta);
-		obstacles[i].insertInto(viewImage);
+void ViewController::moveAndDrawObstacles(int delta){
+	for (int i = 0; i < flowers.size(); i++){
+		flowers[i].addToY(delta);
+		flowers[i].insertInto(viewImage);
+	}
+	for (int i = 0; i < enemies.size(); i++){
+		enemies[i].addToY(delta);
+		enemies[i].insertInto(viewImage);
 	}
 }
 
 void ViewController::checkCollision(){
-	for (int i = 0; i < obstacles.size(); i++){
-		bee.collidesWith(obstacles[i]);
+	for (int i = 0; i < flowers.size(); i++){
+		bee.collidesWith(flowers[i]);
+	}
+	for (int i = 0; i < enemies.size(); i++){
+		bee.collidesWith(enemies[i]);
 	}
 }
 
@@ -84,7 +90,7 @@ void ViewController::draw(int delta, float xPosEntry){
 	// draw view during game
 	moveBG(delta);
 	bg.copyTo(viewImage);
-	moveAndDrawFlowers(delta);
+	moveAndDrawObstacles(delta);
 	checkCollision();
 	bee.setX(xPosEntry);
 	bee.insertInto(viewImage);

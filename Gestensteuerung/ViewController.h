@@ -4,8 +4,7 @@
 #include <vector>
 #include "Obstacle.h"
 #include "Bee.h"
-
-#define PI 3.14159265
+#include "Enemy.h"
 
 class ViewController{
 	public:
@@ -20,10 +19,11 @@ class ViewController{
 		void createFlowers();
 		void createEnemies();
 		void moveBG(int delta);
-		void moveAndDrawFlowers(int delta);
+		void moveAndDrawObstacles(int delta);
 		void checkCollision();
 		Bee bee;
-		std::vector<Obstacle> obstacles;
+		std::vector<Obstacle> flowers;
+		std::vector<Enemy> enemies;
 		std::vector<std::string> kindsOfFlower;
 		std::string itos(int i);
 };

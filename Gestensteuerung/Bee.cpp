@@ -44,7 +44,7 @@ void Bee::collidesWith(Obstacle &ob){
 							hurt = true;
 							hurtTime = 8;
 						}
-						cout << "points: " << points << endl;
+						//cout << "points: " << points << endl;
 					}
 				}
 			}

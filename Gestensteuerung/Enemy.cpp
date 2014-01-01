@@ -15,6 +15,8 @@ Enemy::Enemy(int posx, int posy, int maximumX, int maximumY, string name, int am
 	:Obstacle(posx, posy, maximumX, maximumY, name, amount)
 {}
 
+Enemy::Enemy(){}
+
 void Enemy::addToY(int entryY){
 	y = y + entryY;
 	if (y > maxY){
@@ -24,6 +26,7 @@ void Enemy::addToY(int entryY){
 		y = 0 - (rand() % (int)(maxY + 400 + 1));
 	}
 	setX(abs(300*(sin((double)y) * 0.2)));
+	cout << "Enemy X: " << x << endl;
 }
 
 void Enemy::insertInto(Mat &viewImage){
