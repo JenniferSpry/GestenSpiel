@@ -5,6 +5,11 @@
 using namespace std;
 using namespace cv;
 
+/*
+	Represents the bee and collects points
+	has a second picture that is shown for 8 instances (hurttime) when the bee looses points
+*/
+
 // Konstruktor
 Bee::Bee(int posx, int posy, int maximumX, int maximumY, string name)
 	:Entity(posx, posy, maximumX, maximumY, name),
@@ -25,13 +30,16 @@ int Bee::getPoints() const{
 
 void Bee::collidesWith(Obstacle &ob){
 	// the 20 assures that it does not hit everything it just touches
+	// it serves as margin
 	if (ob.getCollable()){ // has it allready been hit just now?
 		if (ob.getY()+ob.getHeight() > y+20){
 			if (ob.getY() < y+image.rows-20){
 				if (ob.getX()+ob.getWidth() > x+20){
 					if (ob.getX() < x+image.cols-20){
+						// set hit object to not collable
 						ob.setCollable(false);
 						addPoints(ob.getWorth());
+						// display hurt image if points were lost
 						if (ob.getWorth() < 0){
 							hurt = true;
 							hurtTime = 8;
@@ -44,11 +52,12 @@ void Bee::collidesWith(Obstacle &ob){
 	}
 }
 
-void Bee::insertInto(Mat &viewImage, float xPosEntry){
-	//Rect roi(Point(x, y), image.size());
-	Rect roi(Point(xPosEntry, y), image.size());
+void Bee::insertInto(Mat &viewImage){
+	// easy inserting (bee will allways be inside the frame)
+	Rect roi(Point(x, y), image.size());
 	Mat destinationROI = viewImage(roi);
 	if (hurt){
+		// use the hurt-image if the bee has just been hurt
 		hurtImage.copyTo(destinationROI, mask);
 		hurtTime--;
 		if (hurtTime <= 0){

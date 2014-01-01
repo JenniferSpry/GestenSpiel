@@ -10,7 +10,7 @@ class Bee : public Entity{
 		void addPoints(int p);
 		int getPoints() const;
 		void collidesWith(Obstacle &ob);
-		void insertInto(cv::Mat &viewImage, float xPosEntry);
+		void insertInto(cv::Mat &viewImage);
 	private:
 		int points;
 		cv::Mat hurtImage;

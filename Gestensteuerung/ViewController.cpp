@@ -26,6 +26,7 @@ ViewController::~ViewController(){};
 
 
 void ViewController::createFlowers(){
+	// create some flowers inside the game frame
 	for (int i = 0; i < 8; i++){
 		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
 		int y = (rand() % (int)(bg.rows + 1));
@@ -33,6 +34,7 @@ void ViewController::createFlowers(){
 		//min + (rand() % (int)(max - min + 1))
 		obstacles[i] = Obstacle(x, y, bg.cols, bg.rows, kindsOfFlower[type], 5);
 	}
+	// create the rest above the game frame
 	for (int i = 8; i < obstacles.size(); i++){
 		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
 		int y = (rand() % (int)(bg.rows + 400 + 1));
@@ -42,6 +44,8 @@ void ViewController::createFlowers(){
 }
 
 void ViewController::createEnemies(){
+	// add enemies to the flowers
+	// insert them above the game frame
 	int amountOfFlowers = obstacles.size();
 	obstacles.resize(amountOfFlowers+1);
 	for (int i = amountOfFlowers; i < obstacles.size(); i++){
@@ -52,6 +56,7 @@ void ViewController::createEnemies(){
 
 
 void ViewController::moveBG(int delta){
+	// move background
 	Mat temp; 
 	bg.copyTo(temp);
 	for (int x = 0; x < (bg.rows-delta); x++){
@@ -76,16 +81,19 @@ void ViewController::checkCollision(){
 }
 
 void ViewController::draw(int delta, float xPosEntry){
+	// draw view during game
 	moveBG(delta);
 	bg.copyTo(viewImage);
 	moveAndDrawFlowers(delta);
 	checkCollision();
-	bee.insertInto(viewImage, xPosEntry);
+	bee.setX(xPosEntry);
+	bee.insertInto(viewImage);
 	putText(viewImage, itos(bee.getPoints()), Point(10,viewImage.rows-10), CV_FONT_HERSHEY_SIMPLEX , 0.5, Scalar(255,255,255),2);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
 void ViewController::drawSolution(){
+	// draw at the end of the game
 	viewImage = viewImage * 0.5;
 	if (bee.getPoints() > 0){
 		// won
@@ -104,6 +112,7 @@ void ViewController::drawSolution(){
 }
 
 string ViewController::itos(int i){
+	// integer to string helpermethod
 	stringstream ss;
 	ss << i;
 	return ss.str();

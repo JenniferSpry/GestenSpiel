@@ -15,6 +15,7 @@ class Obstacle : public Entity{
 		int getHeight();
 		int getWidth();
 		void insertInto(cv::Mat &viewImage);
+		void complexInsert(cv::Mat &viewImage);
 	private:
 		int worth;
 		bool collable; //so it will only register as hit once
