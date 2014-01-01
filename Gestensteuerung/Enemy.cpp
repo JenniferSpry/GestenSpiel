@@ -18,15 +18,14 @@ Enemy::Enemy(int posx, int posy, int maximumX, int maximumY, string name, int am
 Enemy::Enemy(){}
 
 void Enemy::addToY(int entryY){
-	y = y + entryY;
+	y = y + entryY + 1;
 	if (y > maxY){
 		setCollable(true);
 		// reposition
 		x = (rand() % (int)(maxX - 50 + 1));
 		y = 0 - (rand() % (int)(maxY + 400 + 1));
 	}
-	setX(abs(300*(sin((double)y) * 0.2)));
-	cout << "Enemy X: " << x << endl;
+	setX(180 + (180 *( sin((double)y * 0.01))));
 }
 
 void Enemy::insertInto(Mat &viewImage){
