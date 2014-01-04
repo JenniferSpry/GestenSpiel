@@ -130,7 +130,6 @@ void ViewController::drawStart(float xPosEntry){
 	// draw at the beginning of the game
 	moveBG(0);
 	bg.copyTo(viewImage);
-	moveAndDrawObstacles(0);
 	viewImage = viewImage * 0.5;
 	bee.setX(xPosEntry);
 	bee.insertInto(viewImage);
@@ -139,6 +138,18 @@ void ViewController::drawStart(float xPosEntry){
 	putText(viewImage, "Press Esc to leave", Point(100,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
 
 	putText(viewImage, "Explanation...", Point(100,450), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	imshow( "Bienchen & Blümchen", viewImage);
+}
+
+void ViewController::drawCamSearch(){
+	// draw at the beginning of the game
+	moveBG(0);
+	bg.copyTo(viewImage);
+	viewImage = viewImage * 0.5;
+	//this will be in the image
+	putText(viewImage, "Could not find a webcam", Point(100,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	putText(viewImage, "Press the spacebar to try again", Point(100,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	putText(viewImage, "Press Esc to leave", Point(100,390), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 

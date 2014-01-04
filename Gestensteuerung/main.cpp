@@ -8,7 +8,7 @@ using namespace std;
 
 Steuerung steuerung;
 clock_t lastFrame;
-int dist;
+int dist = 0;
 const int maxDistance = 2000;
 ViewController view;
 bool gameOn = true;
@@ -21,13 +21,10 @@ double getDelta() {
 	return delta;
 }
 
-void init(){
-	lastFrame = clock();
-	steuerung.initialize();
-	dist = 0;
-}
 
 void loop(){
+	// Game Loop
+	lastFrame = clock();
 	while(dist < maxDistance){
 		if (!steuerung.process()){ //game stops if there is a problem with the camera
 			break;
@@ -46,6 +43,8 @@ void loop(){
 }
 
 void startLoop(){
+	// Loop to just move the bee
+	lastFrame = clock();
 	while (true){
 		if (!steuerung.process()){ //stops if there is a problem with the camera
 			break;
@@ -68,20 +67,29 @@ void startLoop(){
 
 
 int main(){
-	init();
+
+	// waiting for the webcam
+	while (!steuerung.initialize()) {
+		view.drawCamSearch();
+		key = waitKey(0);
+		if (key == 27){ // esc
+			return 0;
+		}
+	}
+	cout << "Webcam found!" << endl;
+
+	// let the player see how it works
 	startLoop();
-	//start game
+
+	// start the game
 	while (gameOn){
-		lastFrame = clock();
 		loop();
 		if (dist >= maxDistance){
 			// end game
 			view.drawSolution();
 			key = waitKey(0);
 			if (key == 27){
-				//exit
-				gameOn = false;
-				break;
+				return 0;
 			} else if (key != -1){
 				//restart game
 				dist = 0;
@@ -92,8 +100,7 @@ int main(){
 			view.drawPause();
 			key = waitKey(0);
 			if (key == 27){
-				//exit
-				break;
+				return 0;
 			}
 			// go on
 		}

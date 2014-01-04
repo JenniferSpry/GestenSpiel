@@ -21,17 +21,22 @@ Steuerung::~Steuerung(){
 
 }
 
-void Steuerung::initialize(){
+bool Steuerung::initialize(){
 	videoCapture.open(0); //Default-Kamera öffnen
+
+	if (videoCapture.isOpened()){
 	
-	frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
-	frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
+		frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
+		frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
 
-	//processedFrame = Mat(frameWidth, frameHeight, CV_8UC3);
+		//processedFrame = Mat(frameWidth, frameHeight, CV_8UC3);
 
-	//namedWindow("Blue Testframe");
-	namedWindow("Originalvideo");
-
+		//namedWindow("Blue Testframe");
+		namedWindow("Originalvideo");
+		return true;
+	} else {
+		return false;
+	}
 }
 
 float Steuerung::getXPosition(){

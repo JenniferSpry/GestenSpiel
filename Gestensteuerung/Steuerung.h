@@ -6,7 +6,7 @@ class Steuerung{
 public:
 	Steuerung();
 	~Steuerung();
-	void initialize(); //"Controller-Erkennung" geschieht hier (?)
+	bool initialize(); //"Controller-Erkennung" geschieht hier (?)
 	float getXPositionChange(); //gibt Änderung der x-Position zurück. Positiver Wert => Verschiebung nach rechts, Negativer Wert => Verschiebung nach links
 	float getXPosition(); //gibt aktuelle X-Position zurück. Diese Berechnet sich aus dem Mittelwert der Positionen der weißen Pixel in der Binärmaske.
 	void convertToBinary(cv::Mat videoFrame, cv::Mat& processedFrame); //Konvertiert jedes Frame in ein Binärframe, wobei der "Controller" weiß ist, der Hintergrund schwarz.

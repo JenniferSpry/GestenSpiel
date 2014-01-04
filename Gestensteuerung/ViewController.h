@@ -14,6 +14,7 @@ class ViewController{
 		void drawSolution();
 		void drawPause();
 		void drawStart(float xPosEntry);
+		void drawCamSearch();
 	private:
 		cv::Mat bg;
 		cv::Mat viewImage;
