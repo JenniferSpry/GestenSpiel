@@ -11,14 +11,10 @@ using namespace std;
 ViewController::ViewController()
 	:bee(180, 530, 400, 600, "bee"),
 	flowers(30),
-	enemies(3),
-	kindsOfFlower(3)
+	enemies(3)
 	{
 	bg = imread("img/bg.png", 1);
 	namedWindow( "Bienchen & Blümchen", 1 ); 
-	kindsOfFlower[0] = "flower_0";
-	kindsOfFlower[1] = "flower_1";
-	kindsOfFlower[2] = "flower_2";
 	createFlowers();
 	createEnemies();
 	}
@@ -33,14 +29,14 @@ void ViewController::createFlowers(){
 		int y = (rand() % (int)(bg.rows + 1));
 		int type = (rand() % (int)(2 + 1));
 		//min + (rand() % (int)(max - min + 1))
-		flowers[i] = Obstacle(x, y, bg.cols, bg.rows, kindsOfFlower[type], 5);
+		flowers[i] = Obstacle(x, y, bg.cols, bg.rows, "flower_"+itos(type), (type+1)*5);
 	}
 	// create the rest above the game frame
 	for (int i = 8; i < flowers.size(); i++){
 		int x = (rand() % (int)(bg.cols - 50 + 1)); // 50 = flower width
 		int y = (rand() % (int)(bg.rows + 400 + 1));
 		int type = (rand() % (int)(2 + 1));
-		flowers[i] = Obstacle(x, -y, bg.cols, bg.rows, kindsOfFlower[type], 5);
+		flowers[i] = Obstacle(x, -y, bg.cols, bg.rows, "flower_"+itos(type), (type+1)*5);
 	}
 }
 
