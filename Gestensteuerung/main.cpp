@@ -9,7 +9,7 @@ using namespace std;
 Steuerung steuerung;
 clock_t lastFrame;
 int dist = 0;
-const int maxDistance = 2000;
+const int maxDistance = 4000;
 ViewController view;
 bool gameOn = true;
 int key;

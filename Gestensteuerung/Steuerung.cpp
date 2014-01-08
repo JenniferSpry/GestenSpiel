@@ -11,9 +11,6 @@ Steuerung::Steuerung()
 	, xPositionMax(400.0)
 	, xPositionPrev(0.0)
 	, xPositionChange(0.0)
-	//, videoCapture(0) //Darf nicht im Konstruktor initialisiert werden, da Video sonst nicht angezeigt wird
-	, frameNumber(0)
-	, bluePenColour(105,0,0)
 {}
 
 //Destruktor (gibt Ressourcen wieder frei)
@@ -25,13 +22,9 @@ bool Steuerung::initialize(){
 	videoCapture.open(0); //Default-Kamera öffnen
 
 	if (videoCapture.isOpened()){
-	
 		frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
 		frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
 
-		//processedFrame = Mat(frameWidth, frameHeight, CV_8UC3);
-
-		//namedWindow("Blue Testframe");
 		namedWindow("Originalvideo");
 		return true;
 	} else {
@@ -44,7 +37,7 @@ float Steuerung::getXPosition(){
 	xPosition /= 1.6;
 	if(xPosition <= 0){ //Minimale xPosition der Biene
 		xPosition = 0;
-	}else if(xPosition >= 350){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
+	}else if(xPosition >= 350 ){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
 		xPosition = 350;
 	}
 	return xPosition;
@@ -53,19 +46,10 @@ float Steuerung::getXPosition(){
 //Eventuell unnötig
 float Steuerung::getXPositionChange(){
 	//XpositionChange ergibt sich durch XPos - XPosPrev.
-	//Dieser Wert ist positiv bei einer Verschiebung des Controllers nach rechts (d.h. Xpos >= XPosPrev)
-	//und negativ bei einer Verschiebung nach links (XPos < XPosPrev).
 	xPositionChange = xPosition - xPositionPrev;
 	return xPositionChange;
 }
 
-void Steuerung::convertToBinary(cv::Mat videoFrame, cv::Mat& processedFrame){
-
-}
-
-void Steuerung::convertToHSV(cv::Mat videoFrame, cv::Mat& processedFrame){
-
-}
 
 Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
 	int sumx = 0;
@@ -89,128 +73,99 @@ Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
 }
 
 void Steuerung::eliminateFlawedAreas(cv::Mat videoFrameBin){
-		//Jetzt alle weißen Flächen bestimmen und in einem Vector speichern
-		//Diesen Vektor dann nach Größe sortieren
-		//Alle Areas bis auf die größte schwarz einfärben
+		//Alle weißen Flächen im Binärbild bestimmen und in einem Vector speichern
+		//Alle Areas bis auf die größte (maxArea) schwarz einfärben
+		
+		//Es muss eine Kopie der Binärmaske erstellt werden, da findContours() das untersuchte Bild zerstört
 		Mat copyOfVideoFrameBin(frameWidth, frameHeight, CV_8UC1);
+		//Im Vektor contours werden alle Konturen gespeichert
 		vector<vector<Point>> contours;
 		
 		videoFrameBin.copyTo(copyOfVideoFrameBin);
+		//Konturen finden und in contours speichern
 		findContours(copyOfVideoFrameBin, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
 		
-		vector<int> areaSizes;
+		vector<int> areaSizes; //Vektor mit allen Areagrößen
 		int maxArea = 0;
 		for(int i = 0; i < contours.size(); i++){
 			vector<Point> contour = contours[i];
-			double area = contourArea(contour);
-			if(area > maxArea){
-				maxArea = area;
-			}
-			areaSizes.push_back(area);
+			double area = contourArea(contour); //Könnte es hier und in Zeile 98 zu Problemen kommen wegen typecast bzw Ungenauigkeit von double?
+			//Prüfen, ob Area größer als ein vorgegebener Wert, da sonst auch kleinste Reflektionen das Spiel beeinflussen können
+			cout << "Area: " << area << endl;
+			//if(area > 5){
+				if(area > maxArea){
+					maxArea = area;
+				}
+				areaSizes.push_back(area);//area ans Ende von areaSizes hinzufügen
+			//}
 		}
 
-		//Jetzt in areaSizes alle areas < maxArea schwarz färben
-		if(areaSizes.size() >= 2){
+		//Jetzt alle Areas < maxArea aus areaSizes schwarz färben
+		if(areaSizes.size() >= 2){ //gibt es mehr als eine Areagröße in areaSizes?
 			for(int j = 0; j < areaSizes.size(); j++){
 				if(areaSizes[j] < maxArea){
-					//drawContours(copyOfVideoFrameBin, contours, j, Scalar(0,0,0), CV_FILLED);
 					drawContours(videoFrameBin, contours, j, Scalar(0,0,0), CV_FILLED);
 				}
 			}
 		}
 
-		imshow("BinaerCopy", copyOfVideoFrameBin);
+		//imshow("BinaerCopy", copyOfVideoFrameBin); 
 }
 
+void Steuerung::drawGreenCross(Mat videoFrame, Point centroid){
+	//grüne Linie vertikal in Originalvideo zeichnen (mit centroid als Mittlepunkt)
+	Point startPunktVert(centroid.x, centroid.y-10);
+	Point endPunktVert(centroid.x, centroid.y+10);
+	line(videoFrame, startPunktVert, endPunktVert, Scalar(0,255,0), 2);
+
+	//grüne Linie horizontal in Originalvideo zeichnen
+	Point startPunktHor(centroid.x-10, centroid.y);
+	Point endPunktHor(centroid.x+10, centroid.y);
+	line(videoFrame, startPunktHor, endPunktHor, Scalar(0,255,0), 2);
+}
 
 boolean Steuerung::process(){ 
-	//Waren mal vor der Funktion
-		Mat videoFrame;
-		//Mat blueFrame; 
-		Mat videoFrameHSV;
+		Mat videoFrame; //Originalvideo, in dem der Spieler zu sehen ist
 		Mat videoFrameBin; //Binärmaske
 
 		if (videoCapture.read(videoFrame) == false){ 
 			return false;
 		} 
 
-
-		//videoFrameHSV = Mat(frameWidth, frameHeight, CV_8UC3); //HSV Bild
 		videoFrameBin = Mat(frameWidth, frameHeight, CV_8UC1);  //Binärmaske
-		//Mat copyOfVideoFrameBin(frameWidth, frameHeight, CV_8UC1); //Braucht man, da findContours das Bild zerstört
-		//blueFrame = bluePenColour;
 
 		flip(videoFrame,videoFrame,1); //Spiegelt den Frame an der X-Achse (letzter Parameter = 1 bedeutet X-Achsenspiegelung)
 
 		Scalar white(255,255,255);
 		//Problem: Some facial areas sometimes get detected as being white, especially when moving the controller outside the trackable area
-		inRange(videoFrame, white, white, videoFrameBin); //Working with a few flaws for a cell-phone light
-
-		//Jetzt alle weißen Flächen bestimmen und in einem Vector speichern
-		//Diesen Vektor dann nach Größe sortieren
-		//Alle Areas bis auf die größte schwarz einfärben
+		inRange(videoFrame, white, white, videoFrameBin); //Binärmaske vom Originalvideo erzeugen, in der nur weiße Pixel als weiß dargestellt werden
+		//Working with a few flaws for a cell-phone light
 		
-		eliminateFlawedAreas(videoFrameBin); //tut das selbe wie der im folgenden auskommentierte code, wird noch verändert
-
-		/*
-		vector<vector<Point>> contours;
-		
-		videoFrameBin.copyTo(copyOfVideoFrameBin);
-		findContours(copyOfVideoFrameBin, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-		
-		vector<int> areaSizes;
-		int maxArea = 0;
-		for(int i = 0; i < contours.size(); i++){
-			vector<Point> contour = contours[i];
-			double area = contourArea(contour);
-			if(area > maxArea){
-				maxArea = area;
-			}
-			areaSizes.push_back(area);
-		}
-
-		//Jetzt in areaSizes alle areas < maxArea schwarz färben
-		if(areaSizes.size() >= 2){
-			for(int j = 0; j < areaSizes.size(); j++){
-				if(areaSizes[j] < maxArea){
-					//drawContours(copyOfVideoFrameBin, contours, j, Scalar(0,0,0), CV_FILLED);
-					drawContours(videoFrameBin, contours, j, Scalar(0,0,0), CV_FILLED);
-				}
-			}
-		}
-		*/
-
-
-		//Jetzt Opening
+		//Jetzt Opening (reduziert die weiße Fläche) zur Behebung von Pixelfehlern
 		Mat binaryMaskOpened(frameWidth, frameHeight, CV_8UC1);
 		erode(videoFrameBin, binaryMaskOpened, MORPH_RECT);
 		dilate(binaryMaskOpened, videoFrameBin, MORPH_RECT);
+
+		//Durch den Median Blur werden kleinere (weiß) reflektierende Gebiete im Bild eliminiert
+		medianBlur(videoFrameBin, videoFrameBin, 3);
+
+		//Fehlerbehebung auf der Binärmaske, Nähere Erklärung siehe Methode
+		eliminateFlawedAreas(videoFrameBin); 
+
+
+
 
 		//Zentralen Punkt finden:
 		Point centroid = centroidOfWhitePixels(videoFrameBin);
 		//XPositionPrev auf aktuelle XPos setzen
 		xPositionPrev = xPosition;
-		//aktuelle xPosition auf x-Pos des centroids setzen
 		xPosition = centroid.x;
-
-		//Dient nur zur Überprüfung der Funktionen:
-
-		//grüne Linie vertikal auf Maskenkopie zeichnen (mit berechnetem Schwerpunkt als Mittlepunkt)
-		Point startPunktVert(centroid.x, centroid.y-10);
-		Point endPunktVert(centroid.x, centroid.y+10);
-		line(videoFrame, startPunktVert, endPunktVert, Scalar(0,255,0), 2);
-
-		//grüne Linie horizontal auf Maskenkopie zeichnen
-		Point startPunktHor(centroid.x-10, centroid.y);
-		Point endPunktHor(centroid.x+10, centroid.y);
-		line(videoFrame, startPunktHor, endPunktHor, Scalar(0,255,0), 2);
-
-
+		
+		//Grünes Kreuz mit "centroid" als Mittelpunkt in Originalvideo zeichnen
+		drawGreenCross(videoFrame, centroid);
 
 		imshow("Originalvideo", videoFrame);
-		//imshow("HSV", videoFrameHSV);
-		imshow("Binaer", videoFrameBin);
-		//imshow("BinaerCopy", copyOfVideoFrameBin);
+		//imshow("Binaer", videoFrameBin);
 
 		return true;
 }

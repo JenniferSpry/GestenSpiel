@@ -49,9 +49,10 @@ int Entity::getY() const{
 void Entity::setX(int enterX){
 	if (enterX >= maxX + image.cols){
 		x = maxX - image.cols;
-	} else {
+	} else if(abs(enterX - x) <= 200){
 		x = enterX;
-	}
+		//cout << enterX << endl;
+	} 
 }
 
 void Entity::insertInto(Mat &viewImage){
