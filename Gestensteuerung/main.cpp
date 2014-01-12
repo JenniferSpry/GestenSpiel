@@ -67,7 +67,7 @@ void startLoop(){
 
 
 int main(){
-
+	FreeConsole();
 	// waiting for the webcam
 	while (!steuerung.initialize()) {
 		view.drawCamSearch();
@@ -76,7 +76,6 @@ int main(){
 			return 0;
 		}
 	}
-	cout << "Webcam found!" << endl;
 
 	// let the player see how it works
 	startLoop();
