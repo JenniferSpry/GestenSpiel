@@ -2,6 +2,7 @@
 #define VIEWCONTROLLER_H
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <string>
 #include "Obstacle.h"
 #include "Bee.h"
 #include "Enemy.h"
@@ -27,5 +28,6 @@ class ViewController{
 		std::vector<Obstacle> flowers;
 		std::vector<Enemy> enemies;
 		std::string itos(int i);
+		void setTextMiddle(int y, std::string s, double fontSize);
 };
 #endif

@@ -25,7 +25,7 @@ void Enemy::addToY(int entryY){
 		x = (rand() % (int)(maxX - 50 + 1));
 		y = 0 - (rand() % (int)(maxY + 400 + 1));
 	}
-	setX(180 + (180 *( sin((double)y * 0.01))));
+	setX(170 + (170 *( sin((double)y * 0.01))));
 }
 
 void Enemy::insertInto(Mat &viewImage){

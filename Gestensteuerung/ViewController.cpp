@@ -1,4 +1,5 @@
 #include <opencv2/opencv.hpp>
+#include <string>
 #include <math.h>
 #include "ViewController.h"
 #include "Obstacle.h"
@@ -90,7 +91,7 @@ void ViewController::draw(int delta, float xPosEntry){
 	checkCollision();
 	bee.setX(xPosEntry);
 	bee.insertInto(viewImage);
-	putText(viewImage, itos(bee.getPoints()), Point(10,viewImage.rows-10), CV_FONT_HERSHEY_SIMPLEX , 0.5, Scalar(255,255,255),2);
+	putText(viewImage, itos(bee.getPoints()), Point(10,20), CV_FONT_HERSHEY_SIMPLEX , 0.5, Scalar(255,255,255),2);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
@@ -99,17 +100,18 @@ void ViewController::drawSolution(){
 	viewImage = viewImage * 0.5;
 	if (bee.getPoints() > 0){
 		// won
-		Entity sol(80, 200, 400, 600, "won");
+		Entity sol(0, 200, 400, 600, "won");
 		sol.insertInto(viewImage);
 	} else {
 		// lost
-		Entity sol(80, 200, 400, 600, "lost");
+		Entity sol(0, 200, 400, 600, "lost");
 		sol.insertInto(viewImage);
 	}
-	putText(viewImage, itos(bee.getPoints()), Point(160,320), CV_FONT_HERSHEY_SIMPLEX , 1, Scalar(255,255,255),2);
+	setTextMiddle(360, itos(bee.getPoints()), 2);
 	//this will be in the image
-	putText(viewImage, "Press the spacebar", Point(160,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
-	putText(viewImage, "to play again", Point(160,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	setTextMiddle(540, "Tippe die Leertaste,", 0.6);
+	setTextMiddle(560, "um noch einmal zu spielen.", 0.6);
+	setTextMiddle(580, "Tippe Esc zum beenden.", 0.6);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
@@ -117,8 +119,11 @@ void ViewController::drawPause(){
 	// draw at the end of the game
 	viewImage = viewImage * 0.5;
 	//this will be in the image
-	putText(viewImage, "Press the spacebar to continue", Point(100,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
-	putText(viewImage, "Press Esc to leave", Point(100,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	Entity pauseImage(0, 180, 400, 600, "pause");
+	pauseImage.insertInto(viewImage);
+	setTextMiddle(540, "Tippe die Leertaste,", 0.6);
+	setTextMiddle(560, "um weiter zu spielen.", 0.6);
+	setTextMiddle(580, "Tippe Esc zum beenden.", 0.6);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
@@ -130,10 +135,11 @@ void ViewController::drawStart(float xPosEntry){
 	bee.setX(xPosEntry);
 	bee.insertInto(viewImage);
 	//this will be in the image
-	putText(viewImage, "Press the spacebar to start the game", Point(100,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
-	putText(viewImage, "Press Esc to leave", Point(100,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
-
-	putText(viewImage, "Explanation...", Point(100,450), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	Entity explanation(0, 100, 400, 600, "explanation");
+	explanation.insertInto(viewImage);
+	setTextMiddle(470, "Tippe die Leertaste,", 0.6);
+	setTextMiddle(490, "um das Spiel zu beginnen.", 0.6);
+	setTextMiddle(510, "Tippe Esc zum beenden.", 0.6);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
@@ -143,9 +149,10 @@ void ViewController::drawCamSearch(){
 	bg.copyTo(viewImage);
 	viewImage = viewImage * 0.5;
 	//this will be in the image
-	putText(viewImage, "Could not find a webcam", Point(100,350), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
-	putText(viewImage, "Press the spacebar to try again", Point(100,370), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
-	putText(viewImage, "Press Esc to leave", Point(100,390), CV_FONT_HERSHEY_SIMPLEX , 0.6, Scalar(255,255,255),1);
+	setTextMiddle(300, "Es konnte keine Webcam gefunden werden.", 2);	
+	setTextMiddle(320, "Tippe die Leertaste, ", 0.6);
+	setTextMiddle(340, "um sie noch einmal zu suchen.", 0.6);
+	setTextMiddle(580, "Tippe Esc zum beenden.", 0.6);
 	imshow( "Bienchen & Blümchen", viewImage);
 }
 
@@ -154,4 +161,11 @@ string ViewController::itos(int i){
 	stringstream ss;
 	ss << i;
 	return ss.str();
+}
+
+void ViewController::setTextMiddle(int y, string s, double fontSize){
+	//Helpermathod to insert Text in the screen middle
+	Size textsize = getTextSize(s, CV_FONT_HERSHEY_SIMPLEX, fontSize, 1, 0);
+	int xpos = bg.cols / 2 - textsize.width / 2;
+	putText(viewImage, s, Point(xpos,y), CV_FONT_HERSHEY_SIMPLEX , fontSize, Scalar(255,255,255),1);
 }

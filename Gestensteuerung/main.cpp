@@ -76,7 +76,6 @@ int main(){
 			return 0;
 		}
 	}
-	cout << "Webcam found!" << endl;
 
 	// let the player see how it works
 	startLoop();
