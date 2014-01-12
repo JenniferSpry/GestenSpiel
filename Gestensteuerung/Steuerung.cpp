@@ -8,7 +8,7 @@ using namespace std;
 //Konstruktor
 Steuerung::Steuerung() 
 	: xPosition(180.0)
-	, xPositionMax(350.0)
+	, xPositionMax(340.0)
 	, xPositionPrev(0.0)
 {}
 
@@ -21,8 +21,8 @@ bool Steuerung::initialize(){
 	videoCapture.open(0); //Default-Kamera öffnen
 
 	if (videoCapture.isOpened()){
-		frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
-		frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
+		frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH); //Bildbreite des Webcam-Frames auslesen
+		frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT); //Bildhöhe des Webcam-Frames auslesen
 
 		namedWindow("Originalvideo");
 		return true;
@@ -36,7 +36,7 @@ float Steuerung::getXPosition(){
 	xPosition /= 1.6;
 	if(xPosition <= 0){ //Minimale xPosition der Biene
 		xPosition = 0;
-	} else if(xPosition >= xPositionMax){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
+	} else if(xPosition >= xPositionMax ){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
 		xPosition = xPositionMax;
 	}
 	return xPosition;
@@ -86,7 +86,7 @@ void Steuerung::eliminateFlawedAreas(cv::Mat videoFrameBin){
 			vector<Point> contour = contours[i];
 			double area = contourArea(contour); //Könnte es hier und in Zeile 98 zu Problemen kommen wegen typecast bzw Ungenauigkeit von double?
 			//Prüfen, ob Area größer als ein vorgegebener Wert, da sonst auch kleinste Reflektionen das Spiel beeinflussen können
-			//cout << "Area: " << area << endl;
+			cout << "Area: " << area << endl;
 			//if(area > 5){
 				if(area > maxArea){
 					maxArea = area;
@@ -132,9 +132,8 @@ boolean Steuerung::process(){
 		flip(videoFrame,videoFrame,1); //Spiegelt den Frame an der X-Achse (letzter Parameter = 1 bedeutet X-Achsenspiegelung)
 
 		Scalar white(255,255,255);
-		//Problem: Some facial areas sometimes get detected as being white, especially when moving the controller outside the trackable area
 		inRange(videoFrame, white, white, videoFrameBin); //Binärmaske vom Originalvideo erzeugen, in der nur weiße Pixel als weiß dargestellt werden
-		//Working with a few flaws for a cell-phone light
+
 		
 		//Jetzt Opening (reduziert die weiße Fläche) zur Behebung von Pixelfehlern
 		Mat binaryMaskOpened(frameWidth, frameHeight, CV_8UC1);
