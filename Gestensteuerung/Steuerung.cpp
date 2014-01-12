@@ -8,9 +8,8 @@ using namespace std;
 //Konstruktor
 Steuerung::Steuerung() 
 	: xPosition(180.0)
-	, xPositionMax(400.0)
+	, xPositionMax(350.0)
 	, xPositionPrev(0.0)
-	, xPositionChange(0.0)
 {}
 
 //Destruktor (gibt Ressourcen wieder frei)
@@ -37,26 +36,22 @@ float Steuerung::getXPosition(){
 	xPosition /= 1.6;
 	if(xPosition <= 0){ //Minimale xPosition der Biene
 		xPosition = 0;
-	}else if(xPosition >= 350 ){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
-		xPosition = 350;
+	} else if(xPosition >= xPositionMax){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
+		xPosition = xPositionMax;
 	}
 	return xPosition;
 }
 
-//Eventuell unnötig
-float Steuerung::getXPositionChange(){
-	//XpositionChange ergibt sich durch XPos - XPosPrev.
-	xPositionChange = xPosition - xPositionPrev;
-	return xPositionChange;
-}
 
-
+//Gibt den "Mittelpunkt" der weißen Pixel im Binärbild als Point-Objekt zurück.
+//Wenn keine weißen Pixel vorhanden sind, wird (-1,-1) zurückgegeben.
 Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
-	int sumx = 0;
-    int sumy = 0;
-	int count = 0;
+	int sumx = 0;//Summe aller x-Koordinaten der weißen Pixel
+    int sumy = 0;//Summe aller y-Koordinaten der weißen Pixel
+	int count = 0;//Anzahl weiße Pixel
     for(int x = 0; x < image.cols; x++){
         for (int y = 0; y < image.rows; y++){
+			//Wenn das betrachtete Pixel weiß ist, addiere seine x- bzw. y-Koordinaten zu sumx bzw. sumy und zähle count hoch.
 			if (image.at<uchar>(y,x) == 255){
 				sumx += x;
 				sumy += y;
@@ -73,7 +68,7 @@ Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
 }
 
 void Steuerung::eliminateFlawedAreas(cv::Mat videoFrameBin){
-		//Alle weißen Flächen im Binärbild bestimmen und in einem Vector speichern
+		//Alle weißen Flächen im Binärbild bestimmen und in einem Vector speichern.
 		//Alle Areas bis auf die größte (maxArea) schwarz einfärben
 		
 		//Es muss eine Kopie der Binärmaske erstellt werden, da findContours() das untersuchte Bild zerstört
@@ -151,8 +146,6 @@ boolean Steuerung::process(){
 
 		//Fehlerbehebung auf der Binärmaske, Nähere Erklärung siehe Methode
 		eliminateFlawedAreas(videoFrameBin); 
-
-
 
 
 		//Zentralen Punkt finden:
