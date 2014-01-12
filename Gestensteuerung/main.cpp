@@ -67,7 +67,7 @@ void startLoop(){
 
 
 int main(){
-
+	FreeConsole();
 	// waiting for the webcam
 	while (!steuerung.initialize()) {
 		view.drawCamSearch();

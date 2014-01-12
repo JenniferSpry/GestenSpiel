@@ -91,7 +91,7 @@ void Steuerung::eliminateFlawedAreas(cv::Mat videoFrameBin){
 			vector<Point> contour = contours[i];
 			double area = contourArea(contour); //Könnte es hier und in Zeile 98 zu Problemen kommen wegen typecast bzw Ungenauigkeit von double?
 			//Prüfen, ob Area größer als ein vorgegebener Wert, da sonst auch kleinste Reflektionen das Spiel beeinflussen können
-			cout << "Area: " << area << endl;
+			//cout << "Area: " << area << endl;
 			//if(area > 5){
 				if(area > maxArea){
 					maxArea = area;
