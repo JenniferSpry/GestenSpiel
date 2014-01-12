@@ -8,9 +8,8 @@ using namespace std;
 //Konstruktor
 Steuerung::Steuerung() 
 	: xPosition(180.0)
-	, xPositionMax(400.0)
+	, xPositionMax(340.0)
 	, xPositionPrev(0.0)
-	, xPositionChange(0.0)
 {}
 
 //Destruktor (gibt Ressourcen wieder frei)
@@ -22,8 +21,8 @@ bool Steuerung::initialize(){
 	videoCapture.open(0); //Default-Kamera öffnen
 
 	if (videoCapture.isOpened()){
-		frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
-		frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
+		frameWidth = videoCapture.get(CV_CAP_PROP_FRAME_WIDTH); //Bildbreite des Webcam-Frames auslesen
+		frameHeight = videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT); //Bildhöhe des Webcam-Frames auslesen
 
 		namedWindow("Originalvideo");
 		return true;
@@ -37,26 +36,22 @@ float Steuerung::getXPosition(){
 	xPosition /= 1.6;
 	if(xPosition <= 0){ //Minimale xPosition der Biene
 		xPosition = 0;
-	}else if(xPosition >= 350 ){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
-		xPosition = 350;
+	} else if(xPosition >= xPositionMax ){ //Maximale xPosition der Biene (Breite Spielfeld - Breite Biene = 350)
+		xPosition = xPositionMax;
 	}
 	return xPosition;
 }
 
-//Eventuell unnötig
-float Steuerung::getXPositionChange(){
-	//XpositionChange ergibt sich durch XPos - XPosPrev.
-	xPositionChange = xPosition - xPositionPrev;
-	return xPositionChange;
-}
 
-
+//Gibt den "Mittelpunkt" der weißen Pixel im Binärbild als Point-Objekt zurück.
+//Wenn keine weißen Pixel vorhanden sind, wird (-1,-1) zurückgegeben.
 Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
-	int sumx = 0;
-    int sumy = 0;
-	int count = 0;
+	int sumx = 0;//Summe aller x-Koordinaten der weißen Pixel
+    int sumy = 0;//Summe aller y-Koordinaten der weißen Pixel
+	int count = 0;//Anzahl weiße Pixel
     for(int x = 0; x < image.cols; x++){
         for (int y = 0; y < image.rows; y++){
+			//Wenn das betrachtete Pixel weiß ist, addiere seine x- bzw. y-Koordinaten zu sumx bzw. sumy und zähle count hoch.
 			if (image.at<uchar>(y,x) == 255){
 				sumx += x;
 				sumy += y;
@@ -73,7 +68,7 @@ Point Steuerung::centroidOfWhitePixels(const cv::Mat& image){
 }
 
 void Steuerung::eliminateFlawedAreas(cv::Mat videoFrameBin){
-		//Alle weißen Flächen im Binärbild bestimmen und in einem Vector speichern
+		//Alle weißen Flächen im Binärbild bestimmen und in einem Vector speichern.
 		//Alle Areas bis auf die größte (maxArea) schwarz einfärben
 		
 		//Es muss eine Kopie der Binärmaske erstellt werden, da findContours() das untersuchte Bild zerstört
@@ -91,7 +86,7 @@ void Steuerung::eliminateFlawedAreas(cv::Mat videoFrameBin){
 			vector<Point> contour = contours[i];
 			double area = contourArea(contour); //Könnte es hier und in Zeile 98 zu Problemen kommen wegen typecast bzw Ungenauigkeit von double?
 			//Prüfen, ob Area größer als ein vorgegebener Wert, da sonst auch kleinste Reflektionen das Spiel beeinflussen können
-			//cout << "Area: " << area << endl;
+			cout << "Area: " << area << endl;
 			//if(area > 5){
 				if(area > maxArea){
 					maxArea = area;
@@ -137,9 +132,8 @@ boolean Steuerung::process(){
 		flip(videoFrame,videoFrame,1); //Spiegelt den Frame an der X-Achse (letzter Parameter = 1 bedeutet X-Achsenspiegelung)
 
 		Scalar white(255,255,255);
-		//Problem: Some facial areas sometimes get detected as being white, especially when moving the controller outside the trackable area
 		inRange(videoFrame, white, white, videoFrameBin); //Binärmaske vom Originalvideo erzeugen, in der nur weiße Pixel als weiß dargestellt werden
-		//Working with a few flaws for a cell-phone light
+
 		
 		//Jetzt Opening (reduziert die weiße Fläche) zur Behebung von Pixelfehlern
 		Mat binaryMaskOpened(frameWidth, frameHeight, CV_8UC1);
@@ -151,8 +145,6 @@ boolean Steuerung::process(){
 
 		//Fehlerbehebung auf der Binärmaske, Nähere Erklärung siehe Methode
 		eliminateFlawedAreas(videoFrameBin); 
-
-
 
 
 		//Zentralen Punkt finden:
