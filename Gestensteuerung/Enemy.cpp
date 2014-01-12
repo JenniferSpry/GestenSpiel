@@ -22,7 +22,7 @@ void Enemy::addToY(int entryY){
 	if (y > maxY){
 		setCollable(true);
 		// reposition
-		x = (rand() % (int)(maxX - 50 + 1));
+		x = (rand() % (int)(maxX - image.cols + 1));
 		y = 0 - (rand() % (int)(maxY + 400 + 1));
 	}
 	setX(170 + (170 *( sin((double)y * 0.01))));

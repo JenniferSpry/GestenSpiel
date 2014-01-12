@@ -39,13 +39,11 @@ void Bee::collidesWith(Obstacle &ob){
 						// set hit object to not collable
 						ob.setCollable(false);
 						addPoints(ob.getWorth());
-						cout << "added points: " << ob.getWorth() << endl;
 						// display hurt image if points were lost
 						if (ob.getWorth() < 0){
 							hurt = true;
 							hurtTime = 8;
 						}
-						//cout << "points: " << points << endl;
 					}
 				}
 			}
