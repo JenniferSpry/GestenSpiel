@@ -10,7 +10,7 @@ using namespace std;
 
 ViewController::ViewController()
 	:bee(180, 530, 400, 600, "bee"),
-	flowers(30),
+	flowers(25),
 	enemies(3)
 	{
 	bg = imread("img/bg.png", 1);
