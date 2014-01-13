@@ -134,7 +134,6 @@ boolean Steuerung::process(){
 		Scalar white(255,255,255);
 		inRange(videoFrame, white, white, videoFrameBin); //Bin‰rmaske vom Originalvideo erzeugen, in der nur weiﬂe Pixel als weiﬂ dargestellt werden
 
-		
 		//Jetzt Opening (reduziert die weiﬂe Fl‰che) zur Behebung von Pixelfehlern
 		Mat binaryMaskOpened(frameWidth, frameHeight, CV_8UC1);
 		erode(videoFrameBin, binaryMaskOpened, MORPH_RECT);
@@ -143,13 +142,13 @@ boolean Steuerung::process(){
 		//Durch den Median Blur werden kleinere (weiﬂ) reflektierende Gebiete im Bild eliminiert
 		medianBlur(videoFrameBin, videoFrameBin, 3);
 
-		//Fehlerbehebung auf der Bin‰rmaske, N‰here Erkl‰rung siehe Methode
+		//Alle weiﬂen Fl‰chen im Bin‰rbild bestimmen und in einem Vektor speichern.
+		//Alle Areas bis auf die grˆﬂte schwarz einf‰rben.
 		eliminateFlawedAreas(videoFrameBin); 
 
-
-		//Zentralen Punkt finden:
+		//Zentralen Punkt der weiﬂen Pixel finden:
 		Point centroid = centroidOfWhitePixels(videoFrameBin);
-		//XPositionPrev auf aktuelle XPos setzen
+		//XPositionPrev auf aktuelle XPosition setzen
 		xPositionPrev = xPosition;
 		xPosition = centroid.x;
 		

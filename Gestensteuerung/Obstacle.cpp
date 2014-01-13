@@ -35,7 +35,7 @@ void Obstacle::addToY(int entryY){
 	// set collable & reposition
 	if (y > maxY){
 		setCollable(true);
-		x = (rand() % (int)(maxX - 60 + 1));
+		x = (rand() % (int)(maxX - image.cols + 1));
 		y = 0 - (rand() % (int)(maxY + 400 + 1));
 	}
 }

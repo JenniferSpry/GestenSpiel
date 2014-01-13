@@ -149,7 +149,8 @@ void ViewController::drawCamSearch(){
 	bg.copyTo(viewImage);
 	viewImage = viewImage * 0.5;
 	//this will be in the image
-	setTextMiddle(300, "Es konnte keine Webcam gefunden werden.", 2);	
+	setTextMiddle(200, "Es konnte keine Webcam", 0.9);	
+	setTextMiddle(230, "gefunden werden.", 0.9);
 	setTextMiddle(320, "Tippe die Leertaste, ", 0.6);
 	setTextMiddle(340, "um sie noch einmal zu suchen.", 0.6);
 	setTextMiddle(580, "Tippe Esc zum beenden.", 0.6);
